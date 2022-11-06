@@ -1,0 +1,1025 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a Help API documentation.",
+    "version": "1.0.0",
+    "title": "Help App API",
+    "contact": {
+      "email": "adrianolima645@gmail.com"
+    }
+  },
+  "host": "help-app-tcc.herokuapp.com",
+  "tags": [
+    {
+      "name": "touristicPoint",
+      "description": "Everything about your Touristic Points"
+    },
+    {
+      "name": "user",
+      "description": "Operations about user"
+    },
+    {
+      "name": "category",
+      "description": "Operations about category"
+    },
+    {
+      "name": "question",
+      "description": "Operations about question"
+    },
+    {
+      "name": "answer",
+      "description": "Operations about answer"
+    },
+    {
+      "name": "assessment",
+      "description": "Operations about assessment"
+    }
+  ],
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "paths": {
+    "/touristicPoint": {
+      "post": {
+        "tags": [
+          "touristicPoint"
+        ],
+        "summary": "Add a new touristic point to the store",
+        "description": "",
+        "operationId": "createTouristicPoint",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Touristic Point object that needs to be added to the store",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TouristicPoint"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TouristicPoint"
+            }
+          },
+          "400": {
+            "description": "Invalid touristic point"
+          }
+        }
+      }
+    },
+    "/touristicPoint/findByStatus/{pointStatus}": {
+      "get": {
+        "tags": [
+          "touristicPoint"
+        ],
+        "summary": "Finds Touristic Point by status",
+        "operationId": "findTouristicPointByStatus",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "pointStatus",
+            "in": "path",
+            "description": "Status values that need to be considered for filter",
+            "required": true,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TouristicPoint"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid status value"
+          }
+        }
+      }
+    },
+    "/touristicPoint/findByCategory/{categoryId}": {
+      "get": {
+        "tags": [
+          "touristicPoint"
+        ],
+        "summary": "Finds Touristic Point by category.",
+        "description": "Returns a list of touristic points. Use '635561c60b995ae11a5f5a77' for testing.",
+        "operationId": "findTouristicPointsByCategory",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Category"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters value"
+          }
+        }
+      }
+    },
+    "/touristicPoint/{id}": {
+      "get": {
+        "tags": [
+          "touristicPoint"
+        ],
+        "summary": "Find Touristic Point by ID",
+        "description": "Returns a single touristic point. Use '635b1e9d5074924d737d7996' for testing.",
+        "operationId": "getTouristicPointById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of touristic point to return",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TouristicPoint"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Touristic Point not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "touristicPoint"
+        ],
+        "summary": "Update an existing Touristic Point",
+        "description": "",
+        "operationId": "updateTouristicPoint",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Touristic Point object that needs to be added to the store",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TouristicPoint"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TouristicPoint"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Touristic Point not found"
+          },
+          "405": {
+            "description": "Validation exception"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "touristicPoint"
+        ],
+        "summary": "Deletes a Touristic Point",
+        "description": "Delete a single touristic point.",
+        "operationId": "deleteTouristicPoint",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Touristic Point id to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TouristicPoint"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Touristic Point not found"
+          }
+        }
+      }
+    },
+    "/category": {
+      "post": {
+        "tags": [
+          "category"
+        ],
+        "summary": "Register a new category",
+        "description": "Returns a single category.",
+        "operationId": "createCategory",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Creating a new category",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Category"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Category"
+            }
+          },
+          "400": {
+            "description": "Invalid Category"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "category"
+        ],
+        "summary": "Get all categories",
+        "description": "Returns a list of categories.",
+        "operationId": "getAllCategories",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Category"
+            }
+          }
+        }
+      }
+    },
+    "/question": {
+      "post": {
+        "tags": [
+          "question"
+        ],
+        "summary": "Register a new question",
+        "description": "Returns a single question.",
+        "operationId": "addQuestion",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Creating a new question",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Question"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Question"
+            }
+          },
+          "400": {
+            "description": "Invalid Question"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "question"
+        ],
+        "summary": "Update a question",
+        "description": "Returns a single question.",
+        "operationId": "updateQuestion",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updating question",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Question"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Question"
+            }
+          },
+          "400": {
+            "description": "Invalid Question"
+          }
+        }
+      }
+    },
+    "/question/findByStatus": {
+      "get": {
+        "tags": [
+          "question"
+        ],
+        "summary": "Finds question by status",
+        "description": "Returns a list of questions.",
+        "operationId": "findQuestionByStatus",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "questionStatus",
+            "in": "query",
+            "description": "Status values that need to be considered for filter",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "boolean",
+              "default": true
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Question"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid question value"
+          }
+        }
+      }
+    },
+    "/answer": {
+      "post": {
+        "tags": [
+          "answer"
+        ],
+        "summary": "Register a new answer",
+        "description": "Returns a single answer.",
+        "operationId": "addAnswer",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Creating a new answer",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AnswerQuestion"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/AnswerQuestion"
+            }
+          },
+          "400": {
+            "description": "Invalid AnswerQuestion"
+          }
+        }
+      }
+    },
+    "/answer/findByUserId/{userId}": {
+      "get": {
+        "tags": [
+          "answer"
+        ],
+        "summary": "Find answers by user id",
+        "description": "Returns a list of answers. Use '6355cec750efe30182be7aa3' for testing.",
+        "operationId": "findByUserId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "Answer to filter by",
+            "required": true,
+            "type": "array",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AnswerQuestion"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters value"
+          }
+        }
+      }
+    },
+    "/assessment": {
+      "post": {
+        "tags": [
+          "assessment"
+        ],
+        "summary": "Register a new assessment",
+        "description": "Returns a single of assessment.",
+        "operationId": "addAssessment",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Creating a new assessment",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Assessment"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Assessment"
+            }
+          },
+          "400": {
+            "description": "Invalid Assessment"
+          }
+        }
+      }
+    },
+    "/assessment/findByTouristicPoint/{touristicPointId}": {
+      "get": {
+        "tags": [
+          "assessment"
+        ],
+        "summary": "Finds assessment by touristic point",
+        "description": "Returns a list of assessments. Use '635b1e9d5074924d737d7996' for testing.",
+        "operationId": "findAssessmentByTouristicPoint",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "touristicPointId",
+            "in": "path",
+            "description": "Assessment to filter by",
+            "required": true,
+            "type": "array",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Assessment"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters value"
+          }
+        }
+      }
+    },
+    "/user": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Create user",
+        "description": "Returns a single of user.",
+        "operationId": "createUser",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/user/login/{username}/{password}": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Logs user into the system",
+        "description": "Returns a single user. Use 'email:adrianolima@email.com and password:12345' for testing.",
+        "operationId": "loginUser",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "description": "The user name for login",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "path",
+            "description": "The password for login in clear text",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid username/password supplied"
+          }
+        }
+      }
+    },
+    "/user/logout": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Logs out current logged in user session",
+        "description": "",
+        "operationId": "logoutUser",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/user/{userId}": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Get user by user name",
+        "description": "Returns a single user. Use '6355cec750efe30182be7aa3' for testing.",
+        "operationId": "getUserByUserId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The name that needs to be fetched. Use user1 for testing. ",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Updated user",
+        "description": "Returns a single user. Use '6355cec750efe30182be7aa3' for testing.",
+        "operationId": "updateUser",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "User Id that need to be updated",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Delete user",
+        "description": "Returns a single user.",
+        "operationId": "deleteUser",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The name that needs to be deleted",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Category": {
+      "type": "object",
+      "required": [
+        "title"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "Category"
+      }
+    },
+    "User": {
+      "type": "object",
+      "required": [
+        "firstName",
+        "lastName",
+        "email",
+        "password",
+        "dateOfBirth",
+        "phone",
+        "city",
+        "state",
+        "userType",
+        "termsOfUse"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "dateOfBirth": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "userType": {
+          "type": "string",
+          "default": "normal",
+          "enum": [
+            "admin",
+            "sponsered",
+            "normal"
+          ]
+        },
+        "userStatus": {
+          "type": "boolean",
+          "default": true
+        },
+        "termsOfUse": {
+          "type": "boolean"
+        }
+      },
+      "xml": {
+        "name": "User"
+      }
+    },
+    "TouristicPoint": {
+      "type": "object",
+      "required": [
+        "category_id",
+        "user_id",
+        "name",
+        "about",
+        "pointStatus",
+        "petFriendly",
+        "sponsored",
+        "openOnWeekends",
+        "openingHours",
+        "pictures",
+        "geolocation",
+        "pointStatus"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "category_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "about": {
+          "type": "string"
+        },
+        "website": {
+          "type": "string"
+        },
+        "facebook": {
+          "type": "string"
+        },
+        "instagram": {
+          "type": "string"
+        },
+        "youtube": {
+          "type": "string"
+        },
+        "whatsappNumber": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "pointStatus": {
+          "type": "boolean",
+          "default": true,
+          "description": "Touristic Point Status"
+        },
+        "petFriendly": {
+          "type": "boolean"
+        },
+        "sponsored": {
+          "type": "boolean"
+        },
+        "pictures": {
+          "type": "array"
+        },
+        "geolocation": {
+          "type": "object",
+          "properties": {
+            "latitude": {
+              "type": "string"
+            },
+            "longitude": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "Assessment": {
+      "type": "object",
+      "required": [
+        "description",
+        "rating",
+        "assessmentDate",
+        "userId",
+        "touristicPointId"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "rating": {
+          "type": "string"
+        },
+        "assessmentDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "touristicPointId": {
+          "type": "string"
+        }
+      }
+    },
+    "Question": {
+      "type": "object",
+      "required": [
+        "description",
+        "questionStatus"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "questionStatus": {
+          "type": "boolean"
+        }
+      }
+    },
+    "AnswerQuestion": {
+      "type": "object",
+      "required": [
+        "userId",
+        "answer",
+        "dateOfAnswer",
+        "questionId"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "answer": {
+          "type": "boolean"
+        },
+        "dateOfAnswer": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "questionId": {
+          "type": "string"
+        }
+      }
+    },
+    "ApiResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
