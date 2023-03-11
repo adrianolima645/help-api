@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { isConditionalExpression } from 'typescript';
 import * as yup from 'yup';
 import { Category } from '../models/CategoryModel';
 import { TouristicPoint } from '../models/TouristicPointModel';
@@ -23,15 +24,20 @@ class TouristicPointController {
             pointStatus,
             openOnWeekends,
             openingHours,
-            geolocation,
+            latitude,
+            longitude
         } = request.body;
 
         const requestImages = request.files as Express.Multer.File[];
-        console.log(requestImages);
         const pictures = requestImages.map((image) => {
-          return { name: image.filename, url: image.path };
+          return image;
         });
-        console.log(pictures);
+
+        const geolocation = {
+            latitude,
+            longitude
+        };
+
         const data = {
             category_id,
             user_id,
@@ -49,23 +55,24 @@ class TouristicPointController {
         };
 
         const schema = yup.object().shape({
-            category_id: yup.string().required().min(24, "Invalid ID supplied!").matches(/^([0-9A-Fa-f]{24})/, 'Invalid ID supplied!'),
-            user_id: yup.string().required().min(24, "Invalid ID supplied!").matches(/^([0-9A-Fa-f]{24})/, 'Invalid ID supplied!'),
+            category_id: yup.string().required().min(24).matches(/^([0-9A-Fa-f]{24})/, 'Invalid ID supplied!'),
+            user_id: yup.string().required().min(24).matches(/^([0-9A-Fa-f]{24})/, 'Invalid ID supplied!'),
             name: yup.string().required(),
             about: yup.string().required(),
             openingHours: yup.string().required(),
             pictures: yup.array(
                 yup.object().shape({
-                    name: yup.string().required(),
-                    url: yup.string().required(),
+                    originalname: yup.string().required(),
+                    location: yup.string().required(),
+                    key: yup.string().required(),
                 })
             ),
             geolocation: yup.object().shape({
                     latitude: yup.string().required(),
                     longitude: yup.string().required(),
             }),
-            whatsappNumber: yup.string().min(10, "Invalid whatsappNumber supplied!"),
-            phoneNumber: yup.string().min(10, "Invalid phoneNumber supplied!"),
+            whatsappNumber: yup.string(),
+            phoneNumber: yup.string(),
             petFriendly: yup.boolean(),
             pointStatus: yup.boolean(),
             sponsored: yup.boolean(),
@@ -75,7 +82,7 @@ class TouristicPointController {
         try {
             await schema.validate(data, { abortEarly: false });
         } catch (error) {
-            return response.status(400).json({ type: error.name, message: error.message, details: error.errors});
+            return response.status(400).json({ type: error.name, description: error.message, details: error.errors});
         }
         
         const touristicPoint = new TouristicPoint({
@@ -99,11 +106,11 @@ class TouristicPointController {
         });
 
         const category = await Category.findOne({
-            _id: category_id,
+            id: category_id,
         });
 
         const user = await User.findOne({
-            _id: user_id,
+            id: user_id,
         });
     
         if (!category) {
@@ -128,7 +135,7 @@ class TouristicPointController {
         try {
             await schema.validate(request.params, { abortEarly: false });
         } catch (error) {
-            return response.status(400).json({ type: error.name, message: error.message, details: error.errors});
+            return response.status(400).json({ type: error.name, description: error.message, details: error.errors});
         }
 
         const touristicPoint = await TouristicPoint.find({
@@ -148,7 +155,7 @@ class TouristicPointController {
         try {
             await schema.validate(request.params, { abortEarly: false });
         } catch (error) {
-            return response.status(400).json({ type: error.name, message: error.message, details: error.errors});
+            return response.status(400).json({ type: error.name, description: error.message, details: error.errors});
         }
 
         const category = await Category.findOne({
@@ -181,7 +188,7 @@ class TouristicPointController {
         try {
             await schema.validate(request.params, { abortEarly: false });
         } catch (error) {
-            return response.status(400).json({ type: error.name, message: error.message, details: error.errors});
+            return response.status(400).json({ type: error.name, description: error.message, details: error.errors});
         }
 
         const touristicPoint = await TouristicPoint.findOne({
@@ -213,24 +220,61 @@ class TouristicPointController {
             pointStatus,
             openOnWeekends,
             openingHours,
+            latitude,
+            longitude
+        } = request.body;
+
+        let requestImages = [];
+        requestImages = request.files as Express.Multer.File[];
+
+        const pictures = requestImages.map((image) => {
+            return image;
+        });
+
+        const geolocation = {
+            latitude,
+            longitude
+        };
+
+        const data = {
+            category_id,
+            user_id,
+            name,
+            about,
+            openingHours,
             pictures,
             geolocation,
-        } = request.body;
+            whatsappNumber,
+            phoneNumber,
+            petFriendly,
+            pointStatus,
+            sponsored,
+            openOnWeekends,
+        };
 
         const schemaId = yup.object().shape({
             touristicPointId: yup.string().required().min(24, "Invalid ID supplied!").matches(/^([0-9A-Fa-f]{24})/, 'Invalid ID supplied!'),
         });
 
         const schema = yup.object().shape({
-            category_id: yup.string().required().min(24, "Invalid ID supplied!").matches(/^([0-9A-Fa-f]{24})/, 'Invalid ID supplied!'),
-            user_id: yup.string().required().min(24, "Invalid ID supplied!").matches(/^([0-9A-Fa-f]{24})/, 'Invalid ID supplied!'),
+            category_id: yup.string().required().min(24).matches(/^([0-9A-Fa-f]{24})/, 'Invalid ID supplied!'),
+            user_id: yup.string().required().min(24).matches(/^([0-9A-Fa-f]{24})/, 'Invalid ID supplied!'),
             name: yup.string().required(),
             about: yup.string().required(),
             openingHours: yup.string().required(),
-            pictures: yup.array().required(),
-            geolocation: yup.object().required(),
-            whatsappNumber: yup.string().min(10, "Invalid whatsappNumber supplied!"),
-            phoneNumber: yup.string().min(10, "Invalid phoneNumber supplied!"),
+            pictures: yup.array(
+                yup.object().shape({
+                    originalname: yup.string().required(),
+                    location: yup.string().required(),
+                    key: yup.string().required(),
+                })
+            ),
+            geolocation: yup.object().shape({
+                    latitude: yup.string().required(),
+                    longitude: yup.string().required(),
+            }),
+            whatsappNumber: yup.string(),
+            phoneNumber: yup.string(),
             petFriendly: yup.boolean(),
             pointStatus: yup.boolean(),
             sponsored: yup.boolean(),
@@ -239,13 +283,14 @@ class TouristicPointController {
 
         try {
             await schemaId.validate(request.params, { abortEarly: false });
-            await schema.validate(request.body, { abortEarly: false });
+            await schema.validate(data, { abortEarly: false });
         } catch (error) {
-            return response.status(400).json({ type: error.name, message: error.message, details: error.errors});
+            return response.status(400).json({ type: error.name, description: error.message, details: error.errors});
         }
-        
-        const touristicPoint = new TouristicPoint({
-            _id: touristicPointId,
+
+        const oldTouristicPoint = await TouristicPoint.findOne({_id: touristicPointId});
+       
+        const touristicPoint = {
             category_id,
             user_id,
             name,
@@ -261,26 +306,26 @@ class TouristicPointController {
             pointStatus,
             openOnWeekends,
             openingHours,
-            pictures,
+            pictures: [...oldTouristicPoint.pictures, ...pictures],
             geolocation,
-        });
+        };
 
         const query = { 
             _id: touristicPointId,
-            pointStatus: true,
-        };
+         };
+
         const options = {
             new: false,
             upsert: false,
         };
 
-        const result = await User.findOneAndUpdate(query, touristicPoint, options);
+        const result = await TouristicPoint.findOneAndUpdate(query, touristicPoint, options);
 
         if (!result) {
             return response.status(400).json(result);
         }
 
-        return response.status(200).json({description: "successful operation", schema:touristicPoint});
+        return response.status(200).json({description: "successful operation", schema:result});
     }
 
     async deleteTouristicPoint(request: Request, response: Response) {
@@ -293,12 +338,12 @@ class TouristicPointController {
          try {
             await schemaId.validate(request.params, { abortEarly: false });
         } catch (error) {
-            return response.status(400).json({ type: error.name, message: error.message, details: error.errors});
+            return response.status(400).json({ type: error.name, description: error.message, details: error.errors});
         }
 
         const query = { _id: touristicPointId };
 
-        const result = await User.findOneAndDelete(query);
+        const result = await TouristicPoint.findOneAndDelete(query);
 
         if (!result) {
             return response.status(400).json(result);

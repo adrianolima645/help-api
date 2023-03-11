@@ -21,7 +21,11 @@ const assessmentSchema = new Schema<IAssessment>({
   assessmentDate: {
     type: Date,
     required: true,
-  }
+  },
+  author: {
+    type: String,
+    required: true,
+  },
 });
 assessmentSchema.method('toJSON', function () {
   const { __v, _id, ...object } = this.toObject();

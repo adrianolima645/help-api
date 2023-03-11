@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import * as yup from 'yup';
-import { AppError } from '../errors/AppError';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 import { User } from '../models/UserModel';
 
 class UserController {
@@ -36,14 +37,17 @@ class UserController {
         try {
             await schema.validate(request.body, { abortEarly: false });
         } catch (error) {
-            return response.status(400).json({ type: error.name, message: error.message, details: error.errors});
+            return response.status(400).json({ type: error.name, description: error.message, details: error.errors});
         }
+
+        const salt = await bcrypt.genSalt(12);
+        const passwordHash = await bcrypt.hash(password, salt);
         
         const user = new User({
             firstName,
             lastName,
             email,
-            password,
+            password: passwordHash,
             dateOfBirth,
             phone,
             city,
@@ -75,7 +79,7 @@ class UserController {
         try {
             await schema.validate(request.params, { abortEarly: false });
         } catch (error) {
-            return response.status(400).json({ type: error.name, message: error.message, details: error.errors});
+            return response.status(400).json({ type: error.name, description: error.message, details: error.errors});
         }
 
         const user = new User({
@@ -108,13 +112,13 @@ class UserController {
         try {
             await schema.validate(request.params, { abortEarly: false });
         } catch (error) {
-            return response.status(400).json({ type: error.name, message: error.message, details: error.errors});
+            return response.status(400).json({ type: error.name, description: error.message, details: error.errors});
         }
 
         const user = await User.findOne({
             _id: userId,
             userStatus: true,
-        });
+        }, '-password');
 
         if (!user) {
             return response.status(404).json({message: "User not found"});
@@ -125,7 +129,6 @@ class UserController {
 
     async loginUser(request: Request, response: Response) {
         const { email, password } = request.params;
-
         const schema = yup.object().shape({
             email: yup.string().email().required(),
             password: yup.string().required(),
@@ -134,19 +137,34 @@ class UserController {
         try {
             await schema.validate(request.params, { abortEarly: false });
         } catch (error) {
-            return response.status(400).json({ type: error.name, message: error.message, details: error.errors});
+            return response.status(400).json({ type: error.name, description: error.message, details: error.errors});
         }
 
         const result = await User.findOne({
-            email,
-            password,
+            email
         });
 
         if (!result) {
             return response.status(404).json({message: "User not found"});
         }
 
-        return response.status(200).json({message: "successful operation", schema: result});
+        try {
+            const passwordHash = await bcrypt.compare(password, result.password);
+
+            if (!passwordHash) {
+                return response.status(400).json({message: "Senha inválida!"});
+            }
+
+            const secret = process.env.SECRET;
+
+            const token = jwt.sign({
+                id:result._id,
+            }, secret)
+
+            return response.status(200).json({message: "successful operation", schema: result, token: token});
+        } catch (error) {
+            return response.status(500).json({ type: error.name, description: error.message, details: error.errors});
+        }
     }
 
     async logoutUser(request: Request, response: Response) {
@@ -191,15 +209,18 @@ class UserController {
             await schemaId.validate(request.params, { abortEarly: false });
             await schema.validate(request.body, { abortEarly: false });
         } catch (error) {
-            return response.status(400).json({ type: error.name, message: error.message, details: error.errors});
+            return response.status(400).json({ type: error.name, description: error.message, details: error.errors});
         }
+
+        const salt = await bcrypt.genSalt(12);
+        const passwordHash = await bcrypt.hash(password, salt);
 
         const user = new User({
             _id: userId,
             firstName,
             lastName,
             email,
-            password,
+            password: passwordHash,
             dateOfBirth,
             phone,
             city,
@@ -224,7 +245,11 @@ class UserController {
             return response.status(400).json(result);
         }
 
-        return response.status(200).json({description: "successful operation", schema:result});
+        const updatedUser = await User.findOne({
+            _id: userId,
+        }, '-password');
+
+        return response.status(200).json({description: "successful operation", schema:updatedUser});
     }
 }
 

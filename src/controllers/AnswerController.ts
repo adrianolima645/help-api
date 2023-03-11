@@ -22,7 +22,7 @@ class AnswerController {
         try {
             await schema.validate(request.body, { abortEarly: false });
         } catch (error) {
-            return response.status(400).json({ type: error.name, message: error.message, details: error.errors});
+            return response.status(400).json({ type: error.name, description: error.message, details: error.errors});
         }
         
         const answerObj = new Answer({
@@ -34,7 +34,7 @@ class AnswerController {
 
         await answerObj.save();
 
-        return response.status(200).json(answerObj);
+        return response.status(200).json({description: "successful operation", schema: answerObj});
     }
 
     async findByUserId(request: Request, response: Response) {
@@ -47,18 +47,18 @@ class AnswerController {
         try {
             await schema.validate(request.params, { abortEarly: false });
         } catch (error) {
-            return response.status(400).json({ type: error.name, message: error.message, details: error.errors});
+            return response.status(400).json({ type: error.name, description: error.message, details: error.errors});
         }
 
         const query = { userId: userId };
 
         const result = await Answer.find(query);
 
-        if (!result) {
-            return response.status(400).json(result);
+        if (!result || !result.length) {
+            return response.status(404).json({description: "Answer not found!"});
         }
 
-        return response.status(200).json(result);
+        return response.status(200).json({description: "successful operation", schema: result});
      }
     
 }

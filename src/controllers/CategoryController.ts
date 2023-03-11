@@ -14,7 +14,7 @@ class CategoryController {
         try {
             await schema.validate(request.body, { abortEarly: false });
         } catch (error) {
-            return response.status(400).json({ type: error.name, message: error.message, details: error.errors});
+            return response.status(400).json({ type: error.name, description: error.message, details: error.errors});
         }
 
         const category = new Category({

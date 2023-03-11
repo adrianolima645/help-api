@@ -5,4 +5,5 @@ export interface IAssessment {
   description: string,
   rating: string,
   assessmentDate: Date,
+  author: string,
 }

@@ -1,5 +1,6 @@
 export interface IImages {
   id ?: string,
-  name: string,
-  url: string,
+  originalname: string,
+  location: string,
+  key:string,
 }

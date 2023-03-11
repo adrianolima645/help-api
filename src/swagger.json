@@ -39,6 +39,14 @@
     "https",
     "http"
   ],
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "Enter the token with the `Bearer: ` prefix, e.g. 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZmFiMzdlYjQ2MWUzMjNhNjYwYWRmMiIsImlhdCI6MTY3ODQ4OTM1NH0.K3H79mXZYdQaeG9yAzkmGSCg2geZxe_F6ySoxQPijyo'"
+    }
+  },
   "paths": {
     "/touristicPoint": {
       "post": {
@@ -63,6 +71,11 @@
             "schema": {
               "$ref": "#/definitions/TouristicPoint"
             }
+          }
+        ],
+        "security": [
+          {
+            "Bearer": []
           }
         ],
         "responses": {
@@ -97,6 +110,11 @@
             "type": "boolean"
           }
         ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "successful operation",
@@ -119,7 +137,7 @@
           "touristicPoint"
         ],
         "summary": "Finds Touristic Point by category.",
-        "description": "Returns a list of touristic points. Use '635561c60b995ae11a5f5a77' for testing.",
+        "description": "Returns a list of touristic points. Use '6355653cff14774f969b74e0' for testing.",
         "operationId": "findTouristicPointsByCategory",
         "produces": [
           "application/json"
@@ -130,6 +148,11 @@
             "in": "path",
             "required": true,
             "type": "string"
+          }
+        ],
+        "security": [
+          {
+            "Bearer": []
           }
         ],
         "responses": {
@@ -154,7 +177,7 @@
           "touristicPoint"
         ],
         "summary": "Find Touristic Point by ID",
-        "description": "Returns a single touristic point. Use '635b1e9d5074924d737d7996' for testing.",
+        "description": "Returns a single touristic point. Use '63c7f59e5eed7cbcb9e00204' for testing.",
         "operationId": "getTouristicPointById",
         "produces": [
           "application/json"
@@ -166,6 +189,11 @@
             "description": "ID of touristic point to return",
             "required": true,
             "type": "string"
+          }
+        ],
+        "security": [
+          {
+            "Bearer": []
           }
         ],
         "responses": {
@@ -213,6 +241,11 @@
             }
           }
         ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "successful operation",
@@ -248,6 +281,11 @@
             "description": "Touristic Point id to delete",
             "required": true,
             "type": "string"
+          }
+        ],
+        "security": [
+          {
+            "Bearer": []
           }
         ],
         "responses": {
@@ -288,6 +326,11 @@
             }
           }
         ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "successful operation",
@@ -309,6 +352,11 @@
         "operationId": "getAllCategories",
         "produces": [
           "application/json"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
         ],
         "responses": {
           "200": {
@@ -342,6 +390,11 @@
             }
           }
         ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "successful operation",
@@ -373,6 +426,11 @@
             "schema": {
               "$ref": "#/definitions/Question"
             }
+          }
+        ],
+        "security": [
+          {
+            "Bearer": []
           }
         ],
         "responses": {
@@ -413,6 +471,11 @@
             "collectionFormat": "multi"
           }
         ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "successful operation",
@@ -451,6 +514,11 @@
             }
           }
         ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "successful operation",
@@ -470,7 +538,7 @@
           "answer"
         ],
         "summary": "Find answers by user id",
-        "description": "Returns a list of answers. Use '6355cec750efe30182be7aa3' for testing.",
+        "description": "Returns a list of answers. Use '63d5564e91ccd6a7cc254ff1' for testing.",
         "operationId": "findByUserId",
         "produces": [
           "application/json"
@@ -483,6 +551,11 @@
             "required": true,
             "type": "array",
             "type": "string"
+          }
+        ],
+        "security": [
+          {
+            "Bearer": []
           }
         ],
         "responses": {
@@ -523,6 +596,11 @@
             }
           }
         ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "successful operation",
@@ -542,7 +620,7 @@
           "assessment"
         ],
         "summary": "Finds assessment by touristic point",
-        "description": "Returns a list of assessments. Use '635b1e9d5074924d737d7996' for testing.",
+        "description": "Returns a list of assessments. Use '63c80946a6d4503882a6f992' for testing.",
         "operationId": "findAssessmentByTouristicPoint",
         "produces": [
           "application/json"
@@ -555,6 +633,11 @@
             "required": true,
             "type": "array",
             "type": "string"
+          }
+        ],
+        "security": [
+          {
+            "Bearer": []
           }
         ],
         "responses": {
@@ -595,6 +678,11 @@
             }
           }
         ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "responses": {
           "default": {
             "description": "successful operation"
@@ -608,7 +696,7 @@
           "user"
         ],
         "summary": "Logs user into the system",
-        "description": "Returns a single user. Use 'email:adrianolima@email.com and password:12345' for testing.",
+        "description": "Returns a single user. Use 'email:adrianolima+2502+1@email.com and password:Test.123' for testing.",
         "operationId": "loginUser",
         "produces": [
           "application/json"
@@ -627,6 +715,11 @@
             "description": "The password for login in clear text",
             "required": true,
             "type": "string"
+          }
+        ],
+        "security": [
+          {
+            "Bearer": []
           }
         ],
         "responses": {
@@ -651,6 +744,11 @@
           "application/json"
         ],
         "parameters": [],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "responses": {
           "default": {
             "description": "successful operation"
@@ -664,7 +762,7 @@
           "user"
         ],
         "summary": "Get user by user name",
-        "description": "Returns a single user. Use '6355cec750efe30182be7aa3' for testing.",
+        "description": "Returns a single user. Use '63fab37eb461e323a660adf2' for testing.",
         "operationId": "getUserByUserId",
         "produces": [
           "application/json"
@@ -676,6 +774,11 @@
             "description": "The name that needs to be fetched. Use user1 for testing. ",
             "required": true,
             "type": "string"
+          }
+        ],
+        "security": [
+          {
+            "Bearer": []
           }
         ],
         "responses": {
@@ -698,7 +801,7 @@
           "user"
         ],
         "summary": "Updated user",
-        "description": "Returns a single user. Use '6355cec750efe30182be7aa3' for testing.",
+        "description": "Returns a single user. Use '63de8d9d9a21a3592dd3e7ba' for testing.",
         "operationId": "updateUser",
         "produces": [
           "application/json"
@@ -719,6 +822,11 @@
             "schema": {
               "$ref": "#/definitions/User"
             }
+          }
+        ],
+        "security": [
+          {
+            "Bearer": []
           }
         ],
         "responses": {
@@ -753,6 +861,11 @@
             "description": "The name that needs to be deleted",
             "required": true,
             "type": "string"
+          }
+        ],
+        "security": [
+          {
+            "Bearer": []
           }
         ],
         "responses": {

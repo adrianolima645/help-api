@@ -14,7 +14,7 @@ class QuestionController {
         try {
             await schema.validate(request.body, { abortEarly: false });
         } catch (error) {
-            return response.status(400).json({ type: error.name, message: error.message, details: error.errors});
+            return response.status(400).json({ type: error.name, description: error.message, details: error.errors});
         }
 
         const question = new Question({
@@ -44,7 +44,7 @@ class QuestionController {
             await schemaId.validate(request.params, { abortEarly: false });
             await schema.validate(request.body, { abortEarly: false });
         } catch (error) {
-            return response.status(400).json({ type: error.name, message: error.message, details: error.errors});
+            return response.status(400).json({ type: error.name, description: error.message, details: error.errors});
         }
 
         const question = new Question({
@@ -64,10 +64,14 @@ class QuestionController {
         const result = await Question.findOneAndUpdate(query, question, options);
 
         if (!result) {
-            return response.status(400).json(result);
+            return response.status(404).json({description: "Question not found!"});
         }
 
-        return response.status(200).json(result);
+        const updatedQuestion = await Question.findOne({
+            _id: questionId,
+        });
+
+        return response.status(200).json({description: "successful operation", schema: updatedQuestion});
     }
 
     async findByStatus(request: Request, response: Response) {
@@ -79,10 +83,10 @@ class QuestionController {
         const result = await Question.find(query);
 
         if (!result) {
-            return response.status(400).json(result);
+            return response.status(404).json({description: "Question not found!"});
         }
 
-        return response.status(200).json(result);
+        return response.status(200).json({description: "successful operation", schema: result});
     }
 
     async deleteQuestion(request: Request, response: Response) {
@@ -95,7 +99,7 @@ class QuestionController {
         try {
             await schema.validate(request.params, { abortEarly: false });
         } catch (error) {
-            return response.status(400).json({ type: error.name, message: error.message, details: error.errors});
+            return response.status(400).json({ type: error.name, description: error.message, details: error.errors});
         }
 
         const query = { 
@@ -113,7 +117,7 @@ class QuestionController {
             return response.status(400).json(result);
         }
 
-        return response.status(200).json(result);
+        return response.status(200).json({description: "successful operation", schema: result});
     }
     
 }

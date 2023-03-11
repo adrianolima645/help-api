@@ -3,11 +3,15 @@ import { IImages } from '../interfaces/ImagesInterface';
 import { ITouristicPoint } from "../interfaces/TouristicPointInterface";
 
 const imagesSchema = new Schema<IImages>({
-  name: {
+  originalname: {
     type: String,
     required: true,
   },
-  url: {
+  location: {
+    type: String,
+    required: true,
+  },
+  key: {
     type: String,
     required: true,
   },

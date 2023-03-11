@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import * as yup from 'yup';
 import { Assessment } from '../models/AssessmentModel';
+import { User } from '../models/UserModel';
 
 class AssessmentController {
 
@@ -11,10 +12,12 @@ class AssessmentController {
             description,
             rating,
             assessmentDate,
+            author,
         } = request.body;
 
         const schema = yup.object().shape({
             userId: yup.string().required(),
+            author: yup.string().required(),
             touristicPointId: yup.string().required(),
             description: yup.string().required().max(300),
             rating: yup.string().required(),
@@ -24,7 +27,7 @@ class AssessmentController {
         try {
             await schema.validate(request.body, { abortEarly: false });
         } catch (error) {
-            return response.status(400).json({ type: error.name, message: error.message, details: error.errors});
+            return response.status(400).json({ type: error.name, description: error.message, details: error.errors});
         }
         
         const assessment = new Assessment({
@@ -33,11 +36,12 @@ class AssessmentController {
             description,
             rating,
             assessmentDate,
+            author,
         });
 
         await assessment.save();
 
-        return response.status(200).json(assessment);
+        return response.status(200).json({description: "successful operation", schema:assessment});
     }
 
     async findByTouristicPoint(request: Request, response: Response) {
@@ -50,18 +54,18 @@ class AssessmentController {
         try {
             await schema.validate(request.params, { abortEarly: false });
         } catch (error) {
-            return response.status(400).json({ type: error.name, message: error.message, details: error.errors});
+            return response.status(400).json({ type: error.name, description: error.message, details: error.errors});
         }
 
         const query = { touristicPointId: touristicPointId };
         
         const result = await Assessment.find(query);
 
-        if (!result) {
-            return response.status(400).json(result);
+        if (!result || !result.length) {
+            return response.status(404).json({description: "Assessment not found!", schema:result});
         }
 
-        return response.status(200).json(result);
+        return response.status(200).json({description: "successful operation", schema:result});
     }
     
 }
